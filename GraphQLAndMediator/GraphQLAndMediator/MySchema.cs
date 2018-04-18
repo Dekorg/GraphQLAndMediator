@@ -1,13 +1,10 @@
-﻿using GraphQL;
-
-namespace GraphQLAndMediator
+﻿namespace GraphQLAndMediator
 {
     public class MySchema : GraphQL.Types.Schema
     {
-        public MySchema(IDependencyResolver dependencyResolver)
-            : base(dependencyResolver)
+        public MySchema(MyQuery myQuery)
         {
-            Query = dependencyResolver.Resolve<MyQuery>();
+            Query = myQuery;
         }
     }
 }

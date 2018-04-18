@@ -1,5 +1,7 @@
 ﻿using GraphQL.Types;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,7 +9,7 @@ namespace GraphQLAndMediator
 {
     public class MyQuery : ObjectGraphType
     {
-        public MyQuery(IMediator mediator)
+        public MyQuery(IServiceProvider serviceProvider)
         {
             Description = "All queries start here.";
 
@@ -17,9 +19,11 @@ namespace GraphQLAndMediator
                 resolve: async context =>
                 {
                     // try use mediator here
-
-
-                    return await Task.FromResult(new List<User>());
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        return await Task.FromResult(new List<User>());
+                    }
                 }
             );
         }
